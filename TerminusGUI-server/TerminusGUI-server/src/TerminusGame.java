@@ -26,7 +26,7 @@ public class TerminusGame {
         userCommands.add("less");
         userCommands.add("help");
         userCommands.add("exit");
-        //userCommands.add("rm");
+        userCommands.add("rm");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -283,7 +283,7 @@ public class TerminusGame {
         
         locs[3][0] = "mroczna_droga";
         locs[3][1] = "Mroczna droga prowadzaca w gory";
-        locs[3][2] = "0";
+        locs[3][2] = "0,4";
         locs[3][3] = "3";
         locs[3][4] = "0";
         
@@ -331,6 +331,12 @@ public class TerminusGame {
         els[2][0][2] = "null";
         els[2][0][3] = "0";
         els[2][0][4] = "1";
+        
+        els[4][0][0] = "tajemnicza_skrzynia";
+        els[4][0][1] = "Ostroznie otwierasz stara zelazna skrzynie\n\rW srodku znajdujesz zwoj pergaminu na ktorym zostalo napisane: \n\r'Jezeli pragniesz poznac prawde kryjaca sie za zwojem nalezy rzucic zaklecie\n\rwyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
+        els[4][0][2] = "null";
+        els[4][0][3] = "1";
+        els[4][0][4] = "1";
         
         els[5][0][0] = "nauczyciel";
         els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\rTaak teraz Cie poznaje mieszkasz w tym domku niedaleko Akademii\n\rDobrze zacznijmy lekcje wiec\n\rDzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\rSwietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r";
