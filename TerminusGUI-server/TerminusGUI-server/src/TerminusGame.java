@@ -7,7 +7,7 @@ public class TerminusGame {
     private Vector<String> userCommands = new Vector<String>();
     
     private static String[][] locs = new String[15][5];
-    private static String[][][] els = new String[15][5][5];
+    private static String[][][] els = new String[15][5][6];
     
     /**
      * Konstruktor klasy TerminusGame ustawiajacy nick, oraz dodajacy do zmiennej klasy Vector dostepne komendy dla gra na danym etapie gry
@@ -27,6 +27,7 @@ public class TerminusGame {
         userCommands.add("help");
         userCommands.add("exit");
         userCommands.add("rm");
+        userCommands.add("display");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -43,7 +44,8 @@ public class TerminusGame {
                 + "Aby zobaczyc lokacje oraz elementy danego miejsca uzyj polecenia 'ls' \n\r"
                 + "Aby przejsc do nowego miejsca uzyj polecenia 'cd [nazwa_lokacji]'\n\r"
                 + "Aby uzyc danego przedmiotu uzyj polecenia 'less [nazwa_przedmiotu]\n\r"
-                + "Aby wyjsc z gry wpisz komende 'exit'.\n\r";
+                + "Aby wyjsc z gry wpisz komende 'exit'\n\r"
+                + "Aby wrocic do domu wystarczy wpisac 'cd ~'\n\r";
         
         return start + "Witaj " + nick + introduction;
     }
@@ -90,6 +92,12 @@ public class TerminusGame {
             } else {
                 ret = "";
             }
+        } else if ("display".equals(cmds[0])) {
+            if (howLong == 2) {
+                ret = displayTruth(cmds[1]);
+            } else {
+                ret = "";
+            }
         } else {
             ret = "ok";
         }
@@ -97,6 +105,10 @@ public class TerminusGame {
         return ret;
     }
     
+    private String displayTruth(String element) {
+        
+        return "truth";
+    }
     
     private String removeElement(String element) {
         
@@ -276,7 +288,7 @@ public class TerminusGame {
         locs[1][4] = "1";
         
         locs[2][0] = "rzeka";
-        locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic";
+        locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic\n\rPo chwili dostrzegasz ukryta w zaroslach gliniana tabliczke.\n\r";
         locs[2][2] = "0,1";
         locs[2][3] = "2";
         locs[2][4] = "1";
@@ -331,6 +343,13 @@ public class TerminusGame {
         els[2][0][2] = "null";
         els[2][0][3] = "0";
         els[2][0][4] = "1";
+        
+        els[2][1][0] = "tabliczka";
+        els[2][1][1] = "Gliniana Tabliczka na ktorej zostaly zapisane jakies dziwne znaki... nie potrafisz jej odczytac";
+        els[2][1][2] = "null";
+        els[2][1][3] = "0";
+        els[2][1][4] = "1";
+        els[2][1][5] = "Tabliczka ujawnila przed Toba swoje prawdziwe oblicze\n\r";
         
         els[4][0][0] = "tajemnicza_skrzynia";
         els[4][0][1] = "Ostroznie otwierasz stara zelazna skrzynie\n\rW srodku znajdujesz zwoj pergaminu na ktorym zostalo napisane: \n\r'Jezeli pragniesz poznac prawde kryjaca sie za zwojem nalezy rzucic zaklecie\n\rwyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
