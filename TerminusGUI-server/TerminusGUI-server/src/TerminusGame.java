@@ -3,11 +3,11 @@ import java.util.*;
 public class TerminusGame {
     
     private String nick;
-    private int userLocalization;
+    private int userLoc;
     private Vector<String> userCommands = new Vector<String>();
     
-    private static String[][] worldsLocations = new String[15][5];
-    private static String[][][] worldsElements = new String[15][5][3];
+    private static String[][] locs = new String[15][5];
+    private static String[][][] els = new String[15][5][5];
     
     /**
      * Konstruktor klasy TerminusGame ustawiajacy nick, oraz dodajacy do zmiennej klasy Vector dostepne komendy dla gra na danym etapie gry
@@ -18,7 +18,7 @@ public class TerminusGame {
         setWorldLocations();
         
         this.nick = nick;
-        userLocalization = 0;
+        userLoc = 0;
         
         // ustawiam dostepne komendy dla uzytkownika
         userCommands.add("ls");
@@ -26,6 +26,7 @@ public class TerminusGame {
         userCommands.add("less");
         userCommands.add("help");
         userCommands.add("exit");
+        //userCommands.add("rm");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -99,8 +100,20 @@ public class TerminusGame {
     
     private String removeElement(String element) {
         
+        for (int i = 0; i < els[userLoc].length; i++) {
+            if (els[userLoc][i][0] != null && element.equals(els[userLoc][i][0]) && "1".equals(els[userLoc][i][3])) {
+                els[userLoc][i][4] = "0";
+                
+                if ("zwalone_drzewo".equals(els[userLoc][i][0])) {
+                    locs[3][4] = "1";
+                }
+            }
+        }
+        
         return "";
     }
+    
+    
     
     /**
      * Metoda prywatna zwracajaca jako ciag znakow, dostepne komendy dla uzytkownika
@@ -116,6 +129,8 @@ public class TerminusGame {
         
         return result;
     }
+    
+    
     
     private String useElement(String what) {
         
@@ -134,14 +149,16 @@ public class TerminusGame {
     
     private String[] checkElement(String what) {
         
-        String[] result = new String[4];
+        String[] result = new String[5];
         
-        for (int i = 0; i < worldsElements[userLocalization][i].length; i++) {
-            if (worldsElements[userLocalization][i][0] != null && what.equals(worldsElements[userLocalization][i][0])) {
+        System.out.println(els[userLoc].length);
+        
+        for (int i = 0; i < els[userLoc].length; i++) {
+            if (els[userLoc][i][0] != null && what.equals(els[userLoc][i][0])) {
                 result[0] = "true";
-                result[1] = worldsElements[userLocalization][i][0];
-                result[2] = worldsElements[userLocalization][i][1];
-                result[3] = worldsElements[userLocalization][i][2];
+                result[1] = els[userLoc][i][0];
+                result[2] = els[userLoc][i][1];
+                result[3] = els[userLoc][i][2];
             } else {
                 result[0] = "false";
             }
@@ -157,18 +174,23 @@ public class TerminusGame {
     private String moveToNewLocation(String where) {
         
         String[] list;
-        String result = "nie udalo sie...";
+        String result = "\n\r";
         
-        for (int i = 0; i < worldsLocations.length; i++) {
-            if ( where.equals(worldsLocations[i][0])) {     
-                list = worldsLocations[i][2].split(",");
-                for (String l : list) {
-                    if ((userLocalization == Integer.parseInt(l)) && Integer.parseInt(worldsLocations[i][4]) == 1) {
-                        userLocalization = Integer.parseInt(worldsLocations[i][3]);
-                        System.out.println("OK " + userLocalization);
-                        result = "\n\r" + where + "\n\r\n\r";
-                    }
-                }  
+        if (where.equals("~") && userLoc != 0) {
+            userLoc = 0;
+            result = "wrociles do domu\n\r\n\r";
+        } else {
+            for (int i = 0; i < locs.length; i++) {
+                if ( where.equals(locs[i][0])) {     
+                    list = locs[i][2].split(",");
+                    for (String l : list) {
+                        if ((userLoc == Integer.parseInt(l)) && Integer.parseInt(locs[i][4]) == 1) {
+                            userLoc = Integer.parseInt(locs[i][3]);
+                            System.out.println("OK " + userLoc);
+                            result = "\n\r" + where + "\n\r\n\r";
+                        }
+                    }  
+                }
             }
         }
         
@@ -184,8 +206,8 @@ public class TerminusGame {
         String result = "\n\r\n\r--------------------------------------------------------\n\r";
         String elements = "\n\rElementy: \n\r";
         
-        for (String location[] : worldsLocations) {
-            if (location[0] != null && Integer.parseInt(location[3]) == userLocalization) {
+        for (String location[] : locs) {
+            if (location[0] != null && Integer.parseInt(location[3]) == userLoc) {
                 result = result + location[1] + "\n\r\n\r";
             }
         }
@@ -193,20 +215,20 @@ public class TerminusGame {
         result = result + "\n\rLokacje:\n\r";
 
         
-        for (int i = 0; i < worldsLocations.length; i++) {
-            if (worldsLocations[i][0] != null) {
-                String[] list = worldsLocations[i][2].split(",");
+        for (int i = 0; i < locs.length; i++) {
+            if (locs[i][0] != null) {
+                String[] list = locs[i][2].split(",");
                 for (String l : list) {
-                    if ((userLocalization == Integer.parseInt(l)) && worldsLocations[i][4] != null && Integer.parseInt(worldsLocations[i][4]) == 1 ) {
-                        result = result + " - " + worldsLocations[i][0] + "\n\r";
+                    if ((userLoc == Integer.parseInt(l)) && locs[i][4] != null && Integer.parseInt(locs[i][4]) == 1 ) {
+                        result = result + " - " + locs[i][0] + "\n\r";
                     }
                 }
             }
         }
         
-        for (int i = 0; i < worldsElements[userLocalization].length; i++) {
-            if (worldsElements[userLocalization][i][0] != null) {
-                elements = elements + " - " + worldsElements[userLocalization][i][0] + "\n\r";
+        for (int i = 0; i < els[userLoc].length; i++) {
+            if (els[userLoc][i][0] != null && "1".equals(els[userLoc][i][4])) {
+                elements = elements + " - " + els[userLoc][i][0] + "\n\r";
 
             }
         }
@@ -241,55 +263,98 @@ public class TerminusGame {
         // [3] numer danej lokalizacji
         // [4] dostepnosc lokalizacji 0 - nie, 1 - tak
         
-        worldsLocations[0][0] = "dom";        
-        worldsLocations[0][1] = "Stoisz przed swoim domem, znajdujacym sie poza miastem.\n\rNiedaleko znajduje sie strumien, ktory kojaco szumi,\n\rna poludniu, pare kilometrow dalej, znajduje sie Akademia Magii.";    
-        worldsLocations[0][2] = "1,2,3";
-        worldsLocations[0][3] = "0";
-        worldsLocations[0][4] = "1";
+        locs[0][0] = "dom";        
+        locs[0][1] = "Stoisz przed swoim domem, znajdujacym sie poza miastem.\n\rNiedaleko znajduje sie strumien, ktory kojaco szumi,\n\rna poludniu, pare kilometrow dalej, znajduje sie Akademia Magii.";    
+        locs[0][2] = "1,2,3";
+        locs[0][3] = "0";
+        locs[0][4] = "1";
 
-        worldsLocations[1][0] = "akademia";
-        worldsLocations[1][1] = "Znajdujesz sie w Akademii Magii i Czarodziejstwa";
-        worldsLocations[1][2] = "0,2,5";
-        worldsLocations[1][3] = "1";
-        worldsLocations[1][4] = "1";
+        locs[1][0] = "akademia";
+        locs[1][1] = "Znajdujesz sie w Akademii Magii i Czarodziejstwa";
+        locs[1][2] = "0,2,5,6";
+        locs[1][3] = "1";
+        locs[1][4] = "1";
         
-        worldsLocations[2][0] = "rzeka";
-        worldsLocations[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic";
-        worldsLocations[2][2] = "0,1";
-        worldsLocations[2][3] = "2";
-        worldsLocations[2][4] = "1";
+        locs[2][0] = "rzeka";
+        locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic";
+        locs[2][2] = "0,1";
+        locs[2][3] = "2";
+        locs[2][4] = "1";
         
-        worldsLocations[3][0] = "mroczna_droga";
-        worldsLocations[3][1] = "Mroczna droga prowadzaca w gory";
-        worldsLocations[3][2] = "0";
-        worldsLocations[3][3] = "3";
-        worldsLocations[3][4] = "0";
+        locs[3][0] = "mroczna_droga";
+        locs[3][1] = "Mroczna droga prowadzaca w gory";
+        locs[3][2] = "0";
+        locs[3][3] = "3";
+        locs[3][4] = "0";
         
-        worldsLocations[4][0] = "jaskinia";
-        worldsLocations[4][1] = "Znajdujesz sie w ciemnej, mrocznej jaskini";
-        worldsLocations[4][2] = "3";
-        worldsLocations[4][3] = "4";
-        worldsLocations[4][4] = "1";
+        locs[4][0] = "jaskinia";
+        locs[4][1] = "Znajdujesz sie w ciemnej, mrocznej jaskini";
+        locs[4][2] = "3";
+        locs[4][3] = "4";
+        locs[4][4] = "1";
         
-        worldsLocations[5][0] = "sala_treningowa";
-        worldsLocations[5][1] = "Wchodzisz do sali treningowej w ktorej adepci magii czwicza nowa zaklecia";
-        worldsLocations[5][2] = "1";
-        worldsLocations[5][3] = "5";
-        worldsLocations[5][4] = "1";
+        locs[5][0] = "sala_wykladowa";
+        locs[5][1] = "Wchodzisz do sali wykladowej posrodku ktorej stoi dostojny sedziwy mag";
+        locs[5][2] = "1";
+        locs[5][3] = "5";
+        locs[5][4] = "1";
+        
+        locs[6][0] = "sala_treningowa";
+        locs[6][1] = "Wchodzisz do sali treningowej w ktorej adepci magii czwicza nowa zaklecia";
+        locs[6][2] = "1";
+        locs[6][3] = "6";
+        locs[6][4] = "1";
         
         
-        worldsElements[0][0][0] = "stary_czlowiek";
-        worldsElements[0][0][1] = "Witaj, czy nie wiesz jak dostac sie w gory?\n\rWidze ze niestety drzewo bloku droge... ohh nie wiesz co z tym zrobic, no nic poczekam, moze cos wymyslisz\n\rCzy slyszales, ze w Akademii Magii udzielaja dzisiaj darmowych lekcji, moze powinienes sie tam udac.";
         
-        worldsElements[0][1][0] = "zwalone_drzewo";
-        worldsElements[0][1][1] = "Drzewo najwyrazniej zwalilo sie niedawno\n\rNiestety upadajac zatarasowalo droga w gory\n\rMoze udalo by sie je jakos przesunac?";
         
-        worldsElements[2][0][0] = "uszkodzony_most";
-        worldsElements[2][0][1] = "Uszkodzony most, lepiej na niego nie wchodzic,\n\rw kazdej chwili moze sie zawalic... hmmm cos napewno da sie z nim zrobic...";
+        // [0] - nazwa
+        // [1] - opis
+        // [2] - mozliwy czar do nauczenia sie
+        // [3] - usuwalnosc 0 - nie, 1 - tak
+        // [4] - widocznosc 0 - nie, 1 - tak
         
-        worldsElements[5][0][0] = "nauczyciel";
-        worldsElements[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\rTaak teraz Cie poznaje mieszkasz w tym domku niedaleko Akademii\n\rDobrze zacznijmy lekcje wiec\n\rDzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\rSwietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r";
-        worldsElements[5][0][2] = "rm";
+        els[0][0][0] = "stary_czlowiek";
+        els[0][0][1] = "Witaj, czy nie wiesz jak dostac sie w gory?\n\rWidze ze niestety drzewo bloku droge... ohh nie wiesz co z tym zrobic, no nic poczekam, moze cos wymyslisz\n\rCzy slyszales, ze w Akademii Magii udzielaja dzisiaj darmowych lekcji, moze powinienes sie tam udac.";
+        els[0][0][2] = "null";
+        els[0][0][3] = "0";
+        els[0][0][4] = "1";
+        
+        els[0][1][0] = "zwalone_drzewo";
+        els[0][1][1] = "Drzewo najwyrazniej zwalilo sie niedawno\n\rNiestety upadajac zatarasowalo droga w gory\n\rMoze udalo by sie je jakos przesunac?";
+        els[0][1][2] = "null";
+        els[0][1][3] = "1";
+        els[0][1][4] = "1";
+        
+        els[2][0][0] = "uszkodzony_most";
+        els[2][0][1] = "Uszkodzony most, lepiej na niego nie wchodzic,\n\rw kazdej chwili moze sie zawalic... hmmm cos napewno da sie z nim zrobic...";
+        els[2][0][2] = "null";
+        els[2][0][3] = "0";
+        els[2][0][4] = "1";
+        
+        els[5][0][0] = "nauczyciel";
+        els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\rTaak teraz Cie poznaje mieszkasz w tym domku niedaleko Akademii\n\rDobrze zacznijmy lekcje wiec\n\rDzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\rSwietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r";
+        els[5][0][2] = "rm";
+        els[5][0][3] = "0";
+        els[5][0][4] = "1";
+        
+        els[6][0][0] = "pudelko#1";
+        els[6][0][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
+        els[6][0][2] = "null";
+        els[6][0][3] = "1";
+        els[6][0][4] = "1";
+        
+        els[6][1][0] = "pudelko#2";
+        els[6][1][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
+        els[6][1][2] = "null";
+        els[6][1][3] = "1";
+        els[6][1][4] = "1";
+        
+        els[6][2][0] = "pudelko#3";
+        els[6][2][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
+        els[6][2][2] = "null";
+        els[6][2][3] = "1";
+        els[6][2][4] = "1";
         
 
         
