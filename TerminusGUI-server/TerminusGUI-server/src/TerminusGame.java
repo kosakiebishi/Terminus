@@ -26,8 +26,8 @@ public class TerminusGame {
         userCommands.add("less");
         userCommands.add("help");
         userCommands.add("exit");
-        userCommands.add("rm");
-        userCommands.add("display");
+        //userCommands.add("rm");
+        //userCommands.add("display");
         
         // wyswietlam
         System.out.println("Siema " + nick);

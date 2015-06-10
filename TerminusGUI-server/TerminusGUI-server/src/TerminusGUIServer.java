@@ -22,7 +22,7 @@ public class TerminusGUIServer extends JFrame {
 
 	public TerminusGUIServer() {
 		super("Terminus - Server - GUI");
-		setSize(550,300);
+		setSize(650,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -34,6 +34,9 @@ public class TerminusGUIServer extends JFrame {
                 jUsers = new JTextArea();
                 jUsers.setLineWrap(true);
                 jUsers.setEditable(false);
+                //jUsers.setColumns(20);
+                jUsers.setRows(10);
+                
 		
 		jPort = new JTextField(new Integer(portNumber).toString(), 8);
 		buttonRun = new JButton("Uruchom");
@@ -52,7 +55,7 @@ public class TerminusGUIServer extends JFrame {
 
 		add(jPanel, BorderLayout.NORTH);
 		add(new JScrollPane(jMessages), BorderLayout.CENTER);
-                add(new JScrollPane(jUsers), BorderLayout.WEST);
+                add(new JScrollPane(jUsers), BorderLayout.SOUTH);
 
 		setVisible(true);
 	}
@@ -160,8 +163,13 @@ public class TerminusGUIServer extends JFrame {
                             wyjscie = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
                             wyjscie.println("\n\r\n\rWitam w grze Terminus.\nJest to gra przygodowa z elementami RPG.");
-                            wyjscie.println("\n\rPodaj swe imie dzielny poszukiwaczu przygod: ");
-                            nick = wejscie.readLine();
+                            //wyjscie.println("\n\rPodaj swe imie dzielny poszukiwaczu przygod: ");
+                            //nick = wejscie.readLine();
+                            
+                            InetAddress addr = socket.getInetAddress();
+                            
+                            nick = addr.getHostAddress() + " - "+ this;
+                            
 
                             sendLog(" > Join: " + nick + "\n");
                             
@@ -172,7 +180,7 @@ public class TerminusGUIServer extends JFrame {
                             wyjscie.println(terminus.introduction());
 
                             while (isRun && !(linia = wejscie.readLine()).equalsIgnoreCase("exit")) {
-                                    sendLog(linia);
+                                    //sendLog(linia);
                                     wyjscie.println(terminus.nextCommand(linia));
                             }
 
