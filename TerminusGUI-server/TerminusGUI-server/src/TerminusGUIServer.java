@@ -96,7 +96,7 @@ public class TerminusGUIServer extends JFrame {
 
 				for (Connection klient : myClients) {
 					try { 
-						klient.wyjscie.println("Serwer przestal dzialac!");
+						klient.out.println("Serwer przestal dzialac!");
 						klient.socket.close();
 					} catch (IOException e) { }
 				}
@@ -140,13 +140,13 @@ public class TerminusGUIServer extends JFrame {
 
     private class Connection extends Thread {
 
-            private BufferedReader wejscie;
-            private PrintWriter wyjscie;
+            private BufferedReader in;
+            private PrintWriter out;
 
             private Socket socket;
             private String nick;
 
-            private String linia;
+            private String line;
 
             public Connection(Socket socket) {
                     this.socket = socket;
@@ -159,12 +159,12 @@ public class TerminusGUIServer extends JFrame {
             public void run() {
 
                     try { 
-                            wejscie = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            wyjscie = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+                            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
-                            wyjscie.println("\n\r\n\rWitam w grze Terminus.\nJest to gra przygodowa z elementami RPG.");
-                            //wyjscie.println("\n\rPodaj swe imie dzielny poszukiwaczu przygod: ");
-                            //nick = wejscie.readLine();
+                            out.println("\n\r\n\rWitam w grze Terminus.\nJest to gra przygodowa z elementami RPG.");
+                            //out.println("\n\rPodaj swe imie dzielny poszukiwaczu przygod: ");
+                            //nick = in.readLine();
                             
                             InetAddress addr = socket.getInetAddress();
                             
@@ -177,14 +177,14 @@ public class TerminusGUIServer extends JFrame {
                             updateUsers();
                             
                             TerminusGame terminus = new TerminusGame(nick);
-                            wyjscie.println(terminus.introduction());
+                            out.println(terminus.introduction());
 
-                            while (isRun && !(linia = wejscie.readLine()).equalsIgnoreCase("exit")) {
-                                    //sendLog(linia);
-                                    wyjscie.println(terminus.nextCommand(linia));
+                            while (isRun && !(line = in.readLine()).equalsIgnoreCase("exit")) {
+                                    //sendLog(line);
+                                    out.println(terminus.nextCommand(line));
                             }
 
-                            wyjscie.println("Zegnaj\n");
+                            out.println("Zegnaj\n");
                             usersVector.remove(nick);
                             updateUsers();
 
@@ -197,8 +197,8 @@ public class TerminusGUIServer extends JFrame {
                     } catch (Exception e) {
                     } finally {
                             try {
-                                    wejscie.close();
-                                    wyjscie.close();
+                                    in.close();
+                                    out.close();
                                     socket.close();
                             } catch (IOException e) { }
                     }

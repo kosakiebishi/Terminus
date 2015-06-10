@@ -28,6 +28,7 @@ public class TerminusGame {
         userCommands.add("exit");
         //userCommands.add("rm");
         //userCommands.add("display");
+        //userCommands.add("touch");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -44,6 +45,7 @@ public class TerminusGame {
                 + "Aby zobaczyc lokacje oraz elementy danego miejsca uzyj polecenia 'ls' \n\r"
                 + "Aby przejsc do nowego miejsca uzyj polecenia 'cd [nazwa_lokacji]'\n\r"
                 + "Aby uzyc danego przedmiotu uzyj polecenia 'less [nazwa_przedmiotu]\n\r"
+                + "Aby wyswietlic list aktualnych polecen wpisz 'help' \n\r"
                 + "Aby wyjsc z gry wpisz komende 'exit'\n\r"
                 + "Aby wrocic do domu wystarczy wpisac 'cd ~'\n\r";
         
@@ -98,6 +100,12 @@ public class TerminusGame {
             } else {
                 ret = "";
             }
+        } else if ("touch".equals(cmds[0])) {
+            if (howLong == 2) {
+                ret = touchNewElement(cmds[1]);
+            } else {
+                ret = "";
+            }
         } else {
             ret = "ok";
         }
@@ -105,9 +113,35 @@ public class TerminusGame {
         return ret;
     }
     
+    
+    private String touchNewElement(String element) {
+        
+        return "";
+    }
+    
+    
     private String displayTruth(String element) {
         
-        return "truth";
+        String result = "";
+        
+        for (int i = 0; i < els[userLoc].length; i++) {
+            if (els[userLoc][i][0] != null && element.equals(els[userLoc][i][0]) && !"null".equals(els[userLoc][i][5])) {
+                
+                // jezeli tabliczka
+                if ("tabliczka".equals(els[userLoc][i][0])) {
+                    result = "\n\r" + els[userLoc][i][5];
+                    result = result + "\n\rTeraz mozesz uzyc elementu, aby zobaczyc jego prawdziwa forme\n\r";   
+                    
+                    // trzeba wyciagnac indeksy dynamicznie
+                    els[2][1][1] = "Na tabliczce jest zapisany sposob rzucania czaru sluzacego do tworzenia obiektow... To niesamowite.\n\r";
+                    els[2][1][2] = "touch";
+                    
+                    userCommands.add("touch");
+
+                }
+            }
+        }
+        return result;
     }
     
     private String removeElement(String element) {
@@ -143,16 +177,25 @@ public class TerminusGame {
     }
     
     
-    
+
     private String useElement(String what) {
         
         String[] result = checkElement(what);
         String extra = "";
         
+        // uczenie sie czaru rm
         if (result[3] != null && "rm".equals(result[3])) {
             if (!userCommands.contains("rm")) {
                 userCommands.add("rm");
                 extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'rm' [nazwa_elementu], a element zniknie";
+            } 
+        }
+        
+        // uczenie sie czaru display
+        if (result[3] != null && "display".equals(result[3])) {
+            if (!userCommands.contains("display")) {
+                userCommands.add("display");
+                extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'display' [nazwa_elementu], a element odkryje przed Toba prawde";
             }
         }
         
@@ -325,24 +368,28 @@ public class TerminusGame {
         // [2] - mozliwy czar do nauczenia sie
         // [3] - usuwalnosc 0 - nie, 1 - tak
         // [4] - widocznosc 0 - nie, 1 - tak
+        // [5] - ukryta wiadomosc
         
         els[0][0][0] = "stary_czlowiek";
         els[0][0][1] = "Witaj, czy nie wiesz jak dostac sie w gory?\n\rWidze ze niestety drzewo bloku droge... ohh nie wiesz co z tym zrobic, no nic poczekam, moze cos wymyslisz\n\rCzy slyszales, ze w Akademii Magii udzielaja dzisiaj darmowych lekcji, moze powinienes sie tam udac.";
         els[0][0][2] = "null";
         els[0][0][3] = "0";
         els[0][0][4] = "1";
+        els[0][0][5] = "null";
         
         els[0][1][0] = "zwalone_drzewo";
         els[0][1][1] = "Drzewo najwyrazniej zwalilo sie niedawno\n\rNiestety upadajac zatarasowalo droga w gory\n\rMoze udalo by sie je jakos przesunac?";
         els[0][1][2] = "null";
         els[0][1][3] = "1";
         els[0][1][4] = "1";
+        els[0][1][5] = "null";
         
         els[2][0][0] = "uszkodzony_most";
         els[2][0][1] = "Uszkodzony most, lepiej na niego nie wchodzic,\n\rw kazdej chwili moze sie zawalic... hmmm cos napewno da sie z nim zrobic...";
         els[2][0][2] = "null";
         els[2][0][3] = "0";
         els[2][0][4] = "1";
+        els[2][0][5] = "null";
         
         els[2][1][0] = "tabliczka";
         els[2][1][1] = "Gliniana Tabliczka na ktorej zostaly zapisane jakies dziwne znaki... nie potrafisz jej odczytac";
@@ -353,33 +400,38 @@ public class TerminusGame {
         
         els[4][0][0] = "tajemnicza_skrzynia";
         els[4][0][1] = "Ostroznie otwierasz stara zelazna skrzynie\n\rW srodku znajdujesz zwoj pergaminu na ktorym zostalo napisane: \n\r'Jezeli pragniesz poznac prawde kryjaca sie za zwojem nalezy rzucic zaklecie\n\rwyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
-        els[4][0][2] = "null";
+        els[4][0][2] = "display";
         els[4][0][3] = "1";
         els[4][0][4] = "1";
+        els[4][0][5] = "null";
         
         els[5][0][0] = "nauczyciel";
         els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\rTaak teraz Cie poznaje mieszkasz w tym domku niedaleko Akademii\n\rDobrze zacznijmy lekcje wiec\n\rDzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\rSwietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r";
         els[5][0][2] = "rm";
         els[5][0][3] = "0";
         els[5][0][4] = "1";
+        els[5][0][5] = "null";
         
         els[6][0][0] = "pudelko#1";
         els[6][0][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
         els[6][0][2] = "null";
         els[6][0][3] = "1";
         els[6][0][4] = "1";
+        els[6][0][5] = "null";
         
         els[6][1][0] = "pudelko#2";
         els[6][1][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
         els[6][1][2] = "null";
         els[6][1][3] = "1";
         els[6][1][4] = "1";
+        els[6][1][5] = "null";
         
         els[6][2][0] = "pudelko#3";
         els[6][2][1] = "Pudelko przeznaczone do cwiczenia czarow usuwania.\n\r";
         els[6][2][2] = "null";
         els[6][2][3] = "1";
         els[6][2][4] = "1";
+        els[6][2][5] = "null";
         
 
         
