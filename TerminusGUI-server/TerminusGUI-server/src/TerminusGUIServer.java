@@ -11,18 +11,21 @@ public class TerminusGUIServer extends JFrame {
 	private JPanel jPanel;
 	private JTextField jPort;
 	private JTextArea jMessages;
-        private JTextArea jUsers;
+        private JList jUsers;
+        
 
 	private int portNumber = 11023;
 	private boolean isRun = false;
 	private Vector<Connection> myClients = new Vector<Connection>();
         private Vector<String> usersVector = new Vector<String>();
         
+        private DefaultListModel listOfThread;
+        
 
 
 	public TerminusGUIServer() {
 		super("Terminus - Server - GUI");
-		setSize(650,500);
+		setSize(850,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -31,22 +34,21 @@ public class TerminusGUIServer extends JFrame {
 		jMessages.setLineWrap(true);
 		jMessages.setEditable(false);
                 
-                jUsers = new JTextArea();
-                jUsers.setLineWrap(true);
-                jUsers.setEditable(false);
-                //jUsers.setColumns(20);
-                jUsers.setRows(10);
+                listOfThread = new DefaultListModel();
                 
+                jUsers = new JList(listOfThread);
+                jUsers.setFixedCellWidth(120);
 		
 		jPort = new JTextField(new Integer(portNumber).toString(), 8);
 		buttonRun = new JButton("Uruchom");
 		buttonStop = new JButton("Zatrzymaj");
 		buttonStop.setEnabled(false);
 
-		ObslugaZdarzen obsluga = new ObslugaZdarzen();
+		TerminusActionListener obsluga = new TerminusActionListener();
 
 		buttonRun.addActionListener(obsluga);
 		buttonStop.addActionListener(obsluga);
+                
 
 		jPanel.add(new JLabel("Port: "));
 		jPanel.add(jPort);
@@ -54,13 +56,31 @@ public class TerminusGUIServer extends JFrame {
 		jPanel.add(buttonStop);
 
 		add(jPanel, BorderLayout.NORTH);
-		add(new JScrollPane(jMessages), BorderLayout.CENTER);
-                add(new JScrollPane(jUsers), BorderLayout.SOUTH);
+		add(new JScrollPane(jMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+                add(new JScrollPane(jUsers, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.SOUTH);
 
 		setVisible(true);
-	}
+                
+                
+                // Jlist 
+                MouseListener mouseListener = new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() == 2) {
 
-	private class ObslugaZdarzen implements ActionListener {
+                                String selectedItem = (String) jUsers.getSelectedValue();
+
+                                System.out.println(selectedItem);
+
+                         }
+                    }
+                };
+                
+                jUsers.addMouseListener(mouseListener);
+	
+        
+        }
+
+	private class TerminusActionListener implements ActionListener {
 
 		private MyServer srv;
 
@@ -84,8 +104,14 @@ public class TerminusGUIServer extends JFrame {
 				repaint();
 			}
 		}
+                
+                
 	}
 
+        /**
+         * Klasa MyServer rozszerzajaca klase Thread
+         * Klasa odpowiada za nawiazanie polaczenia z klientem
+         */
 	private class MyServer extends Thread {
 
 		private ServerSocket server;
@@ -96,25 +122,27 @@ public class TerminusGUIServer extends JFrame {
 
 				for (Connection klient : myClients) {
 					try { 
-						klient.out.println("Serwer przestal dzialac!");
+						klient.out.println(" ! Server stoped");
 						klient.socket.close();
 					} catch (IOException e) { }
 				}
 
-				sendLog("Wszystkie Polaczenie zastaly zakonczone. \n");
+				sendLog(" ! All connection has been closed. \n");
 			} catch (IOException e) { }
 		}
 
 		public void run() {
 			try {
 				server = new ServerSocket(new Integer(jPort.getText()));
-				sendLog("Serwer uruchomiony na porcie: " + jPort.getText() + "\n");
+				sendLog(" ! Server runs on port: " + jPort.getText() + "\n");
 				
 				while (isRun) {
 					Socket socket = server.accept();
-					sendLog("Nowe polaczenie. \n");
+					sendLog(" ! New connection. \n");
                                         
+
                                         
+                                        // !!!!!!!!!!! new connection !!!!!!!!!!!
 					new Connection(socket).start();
 				}
 			} catch (SocketException e) {
@@ -127,25 +155,20 @@ public class TerminusGUIServer extends JFrame {
                                     sendLog(e.toString());
                                 }
                         }
-                        sendLog("Serwer zatrzymany");
+                        sendLog(" ! Server has been stoped \n\n");
                         usersVector.removeAllElements();
-                        updateUsers();
+                        listOfThread.removeAllElements();
 		}
 		
 	}
-
-
-
 
 
     private class Connection extends Thread {
 
             private BufferedReader in;
             private PrintWriter out;
-
             private Socket socket;
-            private String nick;
-
+            private String thread;
             private String line;
 
             public Connection(Socket socket) {
@@ -161,38 +184,30 @@ public class TerminusGUIServer extends JFrame {
                     try { 
                             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-
-                            out.println("\n\r\n\rWitam w grze Terminus.\nJest to gra przygodowa z elementami RPG.");
-                            //out.println("\n\rPodaj swe imie dzielny poszukiwaczu przygod: ");
-                            //nick = in.readLine();
-                            
                             InetAddress addr = socket.getInetAddress();
+                            thread = this.toString();
                             
-                            nick = addr.getHostAddress() + " - "+ this;
+                            // socket to string to listOfThreads
+                            //listOfThread.addElement(thread);
+                            listOfThread.addElement(socket.toString());
                             
-
-                            sendLog(" > Join: " + nick + "\n");
+                            System.out.println("socket::: " + socket.toString());
+                            sendLog(" ## New client has joined: " + thread + " /// " + socket.toString() + "\n");
                             
-                            usersVector.add(nick);
-                            updateUsers();
-                            
-                            TerminusGame terminus = new TerminusGame(nick);
+                            TerminusGame terminus = new TerminusGame(thread);
                             out.println(terminus.introduction());
 
                             while (isRun && !(line = in.readLine()).equalsIgnoreCase("exit")) {
-                                    //sendLog(line);
                                     out.println(terminus.nextCommand(line));
                             }
 
                             out.println("Zegnaj\n");
-                            usersVector.remove(nick);
-                            updateUsers();
+                            usersVector.remove(thread);
 
                             synchronized(myClients) {
-                                    myClients.remove(this);
+                                    myClients.remove(this);                                   
+                                    System.out.println(this);
                             }
-
-                            sendLog("Polaczenie zostalo zakonczone\n");
 
                     } catch (Exception e) {
                     } finally {
@@ -200,6 +215,12 @@ public class TerminusGUIServer extends JFrame {
                                     in.close();
                                     out.close();
                                     socket.close();
+                                    
+                                    sendLog(" ! Connection has been stoped\n");
+                                    
+                                    //listOfThread.removeElement(thread);
+                                    listOfThread.removeElement(socket.toString());
+                                    
                             } catch (IOException e) { }
                     }
             }
@@ -210,18 +231,6 @@ public class TerminusGUIServer extends JFrame {
                             jMessages.append(tekst);
                             jMessages.setCaretPosition(jMessages.getDocument().getLength());
             }
-            
-            private void updateUsers() {
-                
-                jUsers.setText("");
-                
-                System.out.println(usersVector.toString());
-                
-                for (int i = 0; i < usersVector.size(); i++) {
-                    jUsers.append(usersVector.get(i) + "\n");
-                }
-            }
-            
             
             public static void main(String[] args) {
                             new TerminusGUIServer();
