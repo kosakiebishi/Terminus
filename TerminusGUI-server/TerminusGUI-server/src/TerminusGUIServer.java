@@ -68,8 +68,7 @@ public class TerminusGUIServer extends JFrame {
                         if (e.getClickCount() == 2) {
 
                                 String selectedItem = (String) jUsers.getSelectedValue();
-
-                                System.out.println(selectedItem);
+                                sendLog(" ! You have selected: " + selectedItem + "\n");
 
                          }
                     }
@@ -110,7 +109,7 @@ public class TerminusGUIServer extends JFrame {
 
         /**
          * Klasa MyServer rozszerzajaca klase Thread
-         * Klasa odpowiada za nawiazanie polaczenia z klientem
+         * Klasa odpowiada za nawiazanie polaczenia z clientem
          */
 	private class MyServer extends Thread {
 
@@ -120,10 +119,10 @@ public class TerminusGUIServer extends JFrame {
 			try {
 				server.close();
 
-				for (Connection klient : myClients) {
+				for (Connection client : myClients) {
 					try { 
-						klient.out.println(" ! Server stoped");
-						klient.socket.close();
+						client.out.println(" ! Server stoped");
+						client.socket.close();
 					} catch (IOException e) { }
 				}
 

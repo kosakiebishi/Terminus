@@ -26,9 +26,9 @@ public class TerminusGame {
         userCommands.add("less");
         userCommands.add("help");
         userCommands.add("exit");
-        //userCommands.add("rm");
-        //userCommands.add("display");
-        //userCommands.add("touch");
+        userCommands.add("rm");
+        userCommands.add("display");
+        userCommands.add("dpkg-reconfigure");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -100,9 +100,9 @@ public class TerminusGame {
             } else {
                 ret = "";
             }
-        } else if ("touch".equals(cmds[0])) {
+        } else if ("dpkg-reconfigure".equals(cmds[0])) {
             if (howLong == 2) {
-                ret = touchNewElement(cmds[1]);
+                ret = dpkgreconfigure(cmds[1]);
             } else {
                 ret = "";
             }
@@ -114,9 +114,9 @@ public class TerminusGame {
     }
     
     
-    private String touchNewElement(String element) {
+    private String dpkgreconfigure(String element) {
         
-        return "";
+        return "yeap";
     }
     
     
@@ -133,10 +133,10 @@ public class TerminusGame {
                     result = result + "\n\rTeraz mozesz uzyc elementu, aby zobaczyc jego prawdziwa forme\n\r";   
                     
                     // trzeba wyciagnac indeksy dynamicznie
-                    els[2][1][1] = "Na tabliczce jest zapisany sposob rzucania czaru sluzacego do tworzenia obiektow... To niesamowite.\n\r";
-                    els[2][1][2] = "touch";
+                    els[2][1][1] = "Na tabliczce jest zapisany sposob rzucania czaru sluzacego do naprawiania obiektow... To niesamowite.\n\rWystarczy ze wpisesz 'dpkg-reconfigure [nazwa_obiektu]\n\r";
+                    els[2][1][2] = "dpkg-reconfigure";
                     
-                    userCommands.add("touch");
+                    userCommands.add("dpkg-reconfigure");
 
                 }
             }
