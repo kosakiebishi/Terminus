@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * Klasa TerminusGame
+ * @author greg
+ */
 public class TerminusGame {
     
     private String nick;
@@ -113,7 +117,11 @@ public class TerminusGame {
         return ret;
     }
     
-    
+    /**
+     * Metoda dpkgreconfigure - odpowiada za obsluge czaru 'dpkg-reconfigure'
+     * @param element - element na ktorym jest przeprowadzany czar
+     * @return - metoda zwraca string 
+     */
     private String dpkgreconfigure(String element) {
         
         String result = "";
@@ -133,7 +141,11 @@ public class TerminusGame {
         return result;
     }
     
-    
+    /**
+     * Metoda displayTruth - odpowiada za obsluge czaru 'ls'
+     * @param element - element na ktorym jest przeprowadzany czar
+     * @return 
+     */
     private String displayTruth(String element) {
         
         String result = "";
@@ -158,6 +170,11 @@ public class TerminusGame {
         return result + extra;
     }
     
+    /**
+     * Metoda removeElement - obslugujaca czar 'rm'
+     * @param element
+     * @return 
+     */
     private String removeElement(String element) {
         
         for (int i = 0; i < els[userLoc].length; i++) {
@@ -177,7 +194,7 @@ public class TerminusGame {
     
     
     /**
-     * Metoda prywatna zwracajaca jako ciag znakow, dostepne komendy dla uzytkownika
+     * Metoda prywatna showHelp - zwracajaca jako ciag znakow, dostepne komendy dla uzytkownika
      * @return 
      */
     private String showHelp() {
@@ -192,7 +209,11 @@ public class TerminusGame {
     }
     
     
-
+    /**
+     * Metoda prywatna useElement - obslugujaca czar 'less'
+     * @param what
+     * @return 
+     */
     private String useElement(String what) {
         
         String[] result = checkElement(what);
@@ -217,6 +238,11 @@ public class TerminusGame {
         return "\n\r" + result[2] + extra + "\n\r\n\r";
     }
     
+    /**
+     * Metoda prywatna checkElement - sprawdza czy element istnieje i zwraca tablice
+     * @param what
+     * @return 
+     */
     private String[] checkElement(String what) {
         
         String[] result = new String[5];
