@@ -5,8 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ * Klasa Glowna TerminusGUIServer dzidziczaca po klasie JFrame
+ * @author greg
+ */
 public class TerminusGUIServer extends JFrame {
 
+        
 	private JButton buttonRun, buttonStop;
 	private JPanel jPanel;
 	private JTextField jPort;
@@ -22,7 +27,11 @@ public class TerminusGUIServer extends JFrame {
         private DefaultListModel listOfThread;
         
 
-
+        /**
+         * Konstruktor Klasy TerminusGUIServer
+         * jego zadaniem jest ustawienia wartosci zmiennych
+         * odpowiadajacych za wyswietlanie okien graficznych
+         */
 	public TerminusGUIServer() {
 		super("Terminus - Server - GUI");
 		setSize(850,500);
@@ -62,8 +71,12 @@ public class TerminusGUIServer extends JFrame {
 		setVisible(true);
                 
                 
-                // Jlist 
+
                 MouseListener mouseListener = new MouseAdapter() {
+                    /**
+                    * Metoda odpowiadajaca za stworzenie listenera na JList 
+                    * dwukrotne klikniecie lewym przyciskiem myszy powoduje akcje
+                    */
                     public void mouseClicked(MouseEvent e) {
                         if (e.getClickCount() == 2) {
 
@@ -79,10 +92,19 @@ public class TerminusGUIServer extends JFrame {
         
         }
 
+        
+        /**
+         * Klasa TerminusActionListener implementujacy interfejsc ActionListener
+         * odpowiada z akcje zwiaze z klikniecie na przycisk uruchom, oraz zatrzymaj
+         */
 	private class TerminusActionListener implements ActionListener {
 
 		private MyServer srv;
 
+                /**
+                 * Metoda actionPerformed wykonujaca akcje w sytuacji klijniecia na przycisk uruchom, lub zakoncz
+                 * @param e 
+                 */
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().equals("Uruchom")) {
 				srv = new MyServer();
@@ -115,6 +137,9 @@ public class TerminusGUIServer extends JFrame {
 
 		private ServerSocket server;
 
+                /**
+                 * Metoda kill odpowiadajaca za zatrzymanie serwera
+                 */
 		public void kill() {
 			try {
 				server.close();
@@ -130,6 +155,9 @@ public class TerminusGUIServer extends JFrame {
 			} catch (IOException e) { }
 		}
 
+                /**
+                 * Metoda run odpowiadajaca za uruchomienie serwera
+                 */
 		public void run() {
 			try {
 				server = new ServerSocket(new Integer(jPort.getText()));
@@ -162,6 +190,10 @@ public class TerminusGUIServer extends JFrame {
 	}
 
 
+    /**
+     * Klasa prywatna Connection dziedziczaca po klasie Thread
+     * odpowiada za uruchomienie watku w sytuacji podlaczenia klienta
+     */
     private class Connection extends Thread {
 
             private BufferedReader in;
@@ -170,6 +202,10 @@ public class TerminusGUIServer extends JFrame {
             private String thread;
             private String line;
 
+            /**
+             * Konstruktor klasy Connection przyjmujaca jeden parametr socket
+             * @param socket parametr przekazywany w chwili zestawienia polaczenia
+             */
             public Connection(Socket socket) {
                     this.socket = socket;
 
@@ -178,6 +214,9 @@ public class TerminusGUIServer extends JFrame {
                     }
             }
 
+            /**
+             * Metoda run uruchamiajaca sesje klienta
+             */
             public void run() {
 
                     try { 
@@ -194,10 +233,11 @@ public class TerminusGUIServer extends JFrame {
                             sendLog(" ## New client has joined: " + thread + " /// " + socket.toString() + "\n");
                             
                             TerminusGame terminus = new TerminusGame(thread);
-                            out.println(terminus.introduction());
+                            out.println(terminus.introduction() + "\n\r> ");
+
 
                             while (isRun && !(line = in.readLine()).equalsIgnoreCase("exit")) {
-                                    out.println(terminus.nextCommand(line));
+                                    out.println(terminus.nextCommand(line) + "\n\r> ");
                             }
 
                             out.println("Zegnaj\n");
@@ -225,12 +265,19 @@ public class TerminusGUIServer extends JFrame {
             }
     }
 
-
+            /**
+             * Metoda sendLog zwracajaca logi do pola tekstowego serwera
+             * @param tekst 
+             */
             private void sendLog(String tekst) {
                             jMessages.append(tekst);
                             jMessages.setCaretPosition(jMessages.getDocument().getLength());
             }
             
+            /**
+             * Metoda glowna main tworzaca obiekt klasy TerminusGUIServer
+             * @param args 
+             */
             public static void main(String[] args) {
                             new TerminusGUIServer();
             }

@@ -7,7 +7,7 @@ public class TerminusGame {
     private Vector<String> userCommands = new Vector<String>();
     
     private static String[][] locs = new String[15][5];
-    private static String[][][] els = new String[15][5][6];
+    private static String[][][] els = new String[15][5][7];
     
     /**
      * Konstruktor klasy TerminusGame ustawiajacy nick, oraz dodajacy do zmiennej klasy Vector dostepne komendy dla gra na danym etapie gry
@@ -26,9 +26,9 @@ public class TerminusGame {
         userCommands.add("less");
         userCommands.add("help");
         userCommands.add("exit");
-        userCommands.add("rm");
-        userCommands.add("display");
-        userCommands.add("dpkg-reconfigure");
+        //userCommands.add("rm");
+        //userCommands.add("display");
+        //userCommands.add("dpkg-reconfigure");
         
         // wyswietlam
         System.out.println("Siema " + nick);
@@ -116,13 +116,28 @@ public class TerminusGame {
     
     private String dpkgreconfigure(String element) {
         
-        return "yeap";
+        String result = "";
+        
+        for (int i = 0;i < els[userLoc].length; i++) {
+            if (els[userLoc][i][0] != null && element.equals(els[userLoc][i][0])) {
+                if ("uszkodzony_most".equals(els[userLoc][i][0])) {
+                     els[2][0][0] = "most";
+                     els[2][0][1] = "Most prowadzacy na druga strone rzeki, nareszcie mozesz po nim przejsc";
+                     locs[7][4] = "1";
+                     
+                     result = "Most zostal naprawiony :) \n\r";
+                }
+            }
+        }
+        
+        return result;
     }
     
     
     private String displayTruth(String element) {
         
         String result = "";
+        String extra = "";
         
         for (int i = 0; i < els[userLoc].length; i++) {
             if (els[userLoc][i][0] != null && element.equals(els[userLoc][i][0]) && !"null".equals(els[userLoc][i][5])) {
@@ -130,18 +145,17 @@ public class TerminusGame {
                 // jezeli tabliczka
                 if ("tabliczka".equals(els[userLoc][i][0])) {
                     result = "\n\r" + els[userLoc][i][5];
-                    result = result + "\n\rTeraz mozesz uzyc elementu, aby zobaczyc jego prawdziwa forme\n\r";   
                     
-                    // trzeba wyciagnac indeksy dynamicznie
-                    els[2][1][1] = "Na tabliczce jest zapisany sposob rzucania czaru sluzacego do naprawiania obiektow... To niesamowite.\n\rWystarczy ze wpisesz 'dpkg-reconfigure [nazwa_obiektu]\n\r";
-                    els[2][1][2] = "dpkg-reconfigure";
-                    
-                    userCommands.add("dpkg-reconfigure");
-
+                    // jezeli juz istnieje nie dodawaj
+                    if(!userCommands.contains("dpkg-reconfigure")) {
+                        userCommands.add("dpkg-reconfigure");
+                        extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'dpkg-reconfigure [nazwa_elementu]' a element zostanie naprawiony\n\r";
+                    }
                 }
             }
         }
-        return result;
+
+        return result + extra;
     }
     
     private String removeElement(String element) {
@@ -152,6 +166,7 @@ public class TerminusGame {
                 
                 if ("zwalone_drzewo".equals(els[userLoc][i][0])) {
                     locs[3][4] = "1";
+                    els[0][0][1] = "Wspaniale. Drzewo nie tarasuje juz drogi w gory\n\r";
                 }
             }
         }
@@ -187,7 +202,7 @@ public class TerminusGame {
         if (result[3] != null && "rm".equals(result[3])) {
             if (!userCommands.contains("rm")) {
                 userCommands.add("rm");
-                extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'rm' [nazwa_elementu], a element zniknie";
+                extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'rm' [nazwa_elementu], a element zniknie\n\r";
             } 
         }
         
@@ -195,7 +210,7 @@ public class TerminusGame {
         if (result[3] != null && "display".equals(result[3])) {
             if (!userCommands.contains("display")) {
                 userCommands.add("display");
-                extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'display' [nazwa_elementu], a element odkryje przed Toba prawde";
+                extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'display' [nazwa_elementu], a element odkryje przed Toba prawde\n\r";
             }
         }
         
@@ -242,7 +257,7 @@ public class TerminusGame {
                         if ((userLoc == Integer.parseInt(l)) && Integer.parseInt(locs[i][4]) == 1) {
                             userLoc = Integer.parseInt(locs[i][3]);
                             System.out.println("OK " + userLoc);
-                            result = "\n\r" + where + "\n\r\n\r";
+                            //result = "\n\r" + where + "\n\r\n\r";
                         }
                     }  
                 }
@@ -319,7 +334,8 @@ public class TerminusGame {
         // [4] dostepnosc lokalizacji 0 - nie, 1 - tak
         
         locs[0][0] = "dom";        
-        locs[0][1] = "Stoisz przed swoim domem, znajdujacym sie poza miastem.\n\rNiedaleko znajduje sie strumien, ktory kojaco szumi,\n\rna poludniu, pare kilometrow dalej, znajduje sie Akademia Magii.";    
+        locs[0][1] = "Stoisz przed swoim domem, znajdujacym sie poza miastem.\n\r"
+                + "Niedaleko znajduje sie strumien, ktory kojaco szumi,\n\rna poludniu, pare kilometrow dalej, znajduje sie Akademia Magii.";    
         locs[0][2] = "1,2,3";
         locs[0][3] = "0";
         locs[0][4] = "1";
@@ -331,7 +347,8 @@ public class TerminusGame {
         locs[1][4] = "1";
         
         locs[2][0] = "rzeka";
-        locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic\n\rPo chwili dostrzegasz ukryta w zaroslach gliniana tabliczke.\n\r";
+        locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic\n\r"
+                + "Po chwili dostrzegasz ukryta w zaroslach gliniana tabliczke.\n\r";
         locs[2][2] = "0,1";
         locs[2][3] = "2";
         locs[2][4] = "1";
@@ -360,6 +377,12 @@ public class TerminusGame {
         locs[6][3] = "6";
         locs[6][4] = "1";
         
+        locs[7][0] = "chata_rybaka";
+        locs[7][1] = "Stoisz przed stara chata rybaka na drzwiach znajduje sie kartka";
+        locs[7][2] = "2";
+        locs[7][3] = "7";
+        locs[7][4] = "0";
+        
         
         
         
@@ -369,23 +392,28 @@ public class TerminusGame {
         // [3] - usuwalnosc 0 - nie, 1 - tak
         // [4] - widocznosc 0 - nie, 1 - tak
         // [5] - ukryta wiadomosc
+        // [6] - ukryty czar
         
         els[0][0][0] = "stary_czlowiek";
-        els[0][0][1] = "Witaj, czy nie wiesz jak dostac sie w gory?\n\rWidze ze niestety drzewo bloku droge... ohh nie wiesz co z tym zrobic, no nic poczekam, moze cos wymyslisz\n\rCzy slyszales, ze w Akademii Magii udzielaja dzisiaj darmowych lekcji, moze powinienes sie tam udac.";
+        els[0][0][1] = "Witaj, czy nie wiesz jak dostac sie w gory?\n\r"
+                + "Widze ze niestety drzewo bloku droge... ohh nie wiesz co z tym zrobic, no nic poczekam, moze cos wymyslisz\n\r"
+                + "Czy slyszales, ze w Akademii Magii udzielaja dzisiaj darmowych lekcji, moze powinienes sie tam udac.";
         els[0][0][2] = "null";
         els[0][0][3] = "0";
         els[0][0][4] = "1";
         els[0][0][5] = "null";
         
         els[0][1][0] = "zwalone_drzewo";
-        els[0][1][1] = "Drzewo najwyrazniej zwalilo sie niedawno\n\rNiestety upadajac zatarasowalo droga w gory\n\rMoze udalo by sie je jakos przesunac?";
+        els[0][1][1] = "Drzewo najwyrazniej zwalilo sie niedawno\n\r"
+                + "Niestety upadajac zatarasowalo droga w gory\n\rMoze udalo by sie je jakos przesunac?";
         els[0][1][2] = "null";
         els[0][1][3] = "1";
         els[0][1][4] = "1";
         els[0][1][5] = "null";
         
         els[2][0][0] = "uszkodzony_most";
-        els[2][0][1] = "Uszkodzony most, lepiej na niego nie wchodzic,\n\rw kazdej chwili moze sie zawalic... hmmm cos napewno da sie z nim zrobic...";
+        els[2][0][1] = "Uszkodzony most, lepiej na niego nie wchodzic,\n\r"
+                + "w kazdej chwili moze sie zawalic... hmmm cos napewno da sie z nim zrobic...";
         els[2][0][2] = "null";
         els[2][0][3] = "0";
         els[2][0][4] = "1";
@@ -396,17 +424,27 @@ public class TerminusGame {
         els[2][1][2] = "null";
         els[2][1][3] = "0";
         els[2][1][4] = "1";
-        els[2][1][5] = "Tabliczka ujawnila przed Toba swoje prawdziwe oblicze\n\r";
+        els[2][1][5] = "Tabliczka odslonila przed Toba swoje prawdziwe oblicze\n\r"
+                + "To niesamowite jest tutaj zapisana w formie obrazkowej formula na czar naprawy.\n\r";
+        els[2][1][6] = "dpkg-reconfigure";
         
         els[4][0][0] = "tajemnicza_skrzynia";
-        els[4][0][1] = "Ostroznie otwierasz stara zelazna skrzynie\n\rW srodku znajdujesz zwoj pergaminu na ktorym zostalo napisane: \n\r'Jezeli pragniesz poznac prawde kryjaca sie za zwojem nalezy rzucic zaklecie\n\rwyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
+        els[4][0][1] = "Ostroznie otwierasz stara zelazna skrzynie\n\r"
+                + "W srodku znajdujesz zwoj pergaminu na ktorym zostalo napisane: \n\r"
+                + "'Jezeli pragniesz poznac tajemnice nalezy rzucic zaklecie\n\r"
+                + "wyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
         els[4][0][2] = "display";
         els[4][0][3] = "1";
         els[4][0][4] = "1";
         els[4][0][5] = "null";
         
         els[5][0][0] = "nauczyciel";
-        els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\rTaak teraz Cie poznaje mieszkasz w tym domku niedaleko Akademii\n\rDobrze zacznijmy lekcje wiec\n\rDzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\rSwietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r";
+        els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\r"
+                + "Dobrze zacznijmy lekcje wiec\n\r"
+                + "Dzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r\n\r"
+                + "(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\r"
+                + "Swietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r"
+                + "Mozesz udac sie teraz do sali treningowej, aby przecwiczyc nowe zaklecie\n\r";
         els[5][0][2] = "rm";
         els[5][0][3] = "0";
         els[5][0][4] = "1";
@@ -433,6 +471,12 @@ public class TerminusGame {
         els[6][2][4] = "1";
         els[6][2][5] = "null";
         
+        els[7][2][0] = "kartka";
+        els[7][2][1] = "Koniec Gry.\n\r";
+        els[7][2][2] = "null";
+        els[7][2][3] = "0";
+        els[7][2][4] = "1";
+        els[7][2][5] = "null";
 
         
     }
