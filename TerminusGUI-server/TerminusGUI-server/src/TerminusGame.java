@@ -362,20 +362,20 @@ public class TerminusGame {
         locs[0][0] = "dom";        
         locs[0][1] = "Stoisz przed swoim domem, znajdujacym sie poza miastem.\n\r"
                 + "Niedaleko znajduje sie strumien, ktory kojaco szumi,\n\rna poludniu, pare kilometrow dalej, znajduje sie Akademia Magii.";    
-        locs[0][2] = "1,2,3";
+        locs[0][2] = "2,3,8";
         locs[0][3] = "0";
         locs[0][4] = "1";
 
         locs[1][0] = "akademia";
         locs[1][1] = "Znajdujesz sie w Akademii Magii i Czarodziejstwa";
-        locs[1][2] = "0,2,5,6";
+        locs[1][2] = "8";
         locs[1][3] = "1";
         locs[1][4] = "1";
         
         locs[2][0] = "rzeka";
         locs[2][1] = "Jestes nad rzeka, widzisz uszkodzony most, lepiej na niego nie wchodzic\n\r"
                 + "Po chwili dostrzegasz ukryta w zaroslach gliniana tabliczke.\n\r";
-        locs[2][2] = "0,1";
+        locs[2][2] = "0";
         locs[2][3] = "2";
         locs[2][4] = "1";
         
@@ -393,13 +393,13 @@ public class TerminusGame {
         
         locs[5][0] = "sala_wykladowa";
         locs[5][1] = "Wchodzisz do sali wykladowej posrodku ktorej stoi dostojny sedziwy mag";
-        locs[5][2] = "1";
+        locs[5][2] = "1,6";
         locs[5][3] = "5";
         locs[5][4] = "1";
         
         locs[6][0] = "sala_treningowa";
         locs[6][1] = "Wchodzisz do sali treningowej w ktorej adepci magii czwicza nowa zaklecia";
-        locs[6][2] = "1";
+        locs[6][2] = "1,5";
         locs[6][3] = "6";
         locs[6][4] = "1";
         
@@ -408,6 +408,12 @@ public class TerminusGame {
         locs[7][2] = "2";
         locs[7][3] = "7";
         locs[7][4] = "0";
+        
+        locs[8][0] = "droga_na_poludnie";
+        locs[8][1] = "Po kilkunastu minutach spaceru widzisz w oddali Akademie Magii i Czarodziejstwa";
+        locs[8][2] = "0,1,6,5";
+        locs[8][3] = "8";
+        locs[8][4] = "1";
         
         
         
@@ -464,12 +470,10 @@ public class TerminusGame {
         els[4][0][4] = "1";
         els[4][0][5] = "null";
         
-        els[5][0][0] = "nauczyciel";
-        els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa?\n\r"
-                + "Dobrze zacznijmy lekcje wiec\n\r"
-                + "Dzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r\n\r"
-                + "(po godzinie nauki zaczynasz lapac o co w tym chodzi)\n\r"
-                + "Swietnie, swietnie o to chodzi, moze kiedy bedzie z Ciebie wielki czarodziej.\n\r"
+        els[5][0][0] = "mag";
+        els[5][0][1] = "Witaj, mlody czlowieku\n\rChcesz sie uczyc magii prawa? Dobrze zacznijmy lekcje wiec\n\r"
+                + "Dzisiaj sprobujemy nauczyc sie czaru dzieki ktoremu bedziesz mogl unicestwic wybrane przez Ciebie elementy\n\r"
+                + "Swietnie, swietnie o to chodzi, moze kiedys bedzie z Ciebie wielki czarodziej.\n\r"
                 + "Mozesz udac sie teraz do sali treningowej, aby przecwiczyc nowe zaklecie\n\r";
         els[5][0][2] = "rm";
         els[5][0][3] = "0";
