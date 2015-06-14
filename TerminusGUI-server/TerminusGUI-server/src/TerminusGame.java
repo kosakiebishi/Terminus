@@ -40,6 +40,7 @@ public class TerminusGame {
     
     /** 
      * Publiczna metoda majaca za zadanie zwrocenie ciagu tekstowego z wprowadzeniem do gry Terminus 
+     * @return 
     */
     public String introduction() {
         
@@ -64,7 +65,7 @@ public class TerminusGame {
      * Metoda zwracajaca wartosc tekstowa
      * Jej zadaniem jest przyjecie kolejnej komendy, przetworzenie jej i zwrocenie wyniku
      * @param cmd
-     * @return 
+     * @return String
      */
     public String nextCommand(String cmd) {
         
