@@ -76,7 +76,7 @@ public class TerminusGame {
         //System.out.println("howLong =  " + howLong);
         
         if (!checkSyntax(cmds[0])) {
-            ret = "Blad skladni\n\r\n\r";
+            ret = "?\n\r";
         } else if ("help".equals(cmds[0])) {
             ret = showHelp();
         } else if ("ls".equals(cmds[0])) {
@@ -178,18 +178,29 @@ public class TerminusGame {
      */
     private String removeElement(String element) {
         
+        String result = "";
+        boolean check = false; 
+        
         for (int i = 0; i < els[userLoc].length; i++) {
             if (els[userLoc][i][0] != null && element.equals(els[userLoc][i][0]) && "1".equals(els[userLoc][i][3])) {
+                
+                // element znika
                 els[userLoc][i][4] = "0";
+                
+                // check
+                check = true;
                 
                 if ("zwalone_drzewo".equals(els[userLoc][i][0])) {
                     locs[3][4] = "1";
                     els[0][0][1] = "Wspaniale. Drzewo nie tarasuje juz drogi w gory\n\r";
+                    result = "usunales drzewo\n\r";
                 }
+            } else if (check == false) {
+                result = "nie mozesz usunac tego elementu (moze nie masz prawa tego zrobic)\n\r";
             }
         }
         
-        return "";
+        return result;
     }
     
     
@@ -235,6 +246,11 @@ public class TerminusGame {
                 extra = "\n\r\n\rNauczyles sie nowego czaru, wystarczy ze wpiszesz polecenie 'display' [nazwa_elementu], a element odkryje przed Toba prawde\n\r";
             }
         }
+        
+        if (result[2] == null) {
+            result[2] = "zla nazwa elementu\n\r";
+        }
+        
         
         return "\n\r" + result[2] + extra + "\n\r\n\r";
     }
@@ -467,7 +483,7 @@ public class TerminusGame {
                 + "'Jezeli pragniesz poznac tajemnice nalezy rzucic zaklecie\n\r"
                 + "wyswietlenia prawdy, a znaki zamienia sie w obrazy'.\n\r";
         els[4][0][2] = "display";
-        els[4][0][3] = "1";
+        els[4][0][3] = "0";
         els[4][0][4] = "1";
         els[4][0][5] = "null";
         
@@ -503,7 +519,7 @@ public class TerminusGame {
         els[6][2][5] = "null";
         
         els[7][2][0] = "kartka";
-        els[7][2][1] = "Koniec Gry.\n\r";
+        els[7][2][1] = "\n\r Gratulacje! Ukoczyles gre Terminus :) \n\r";
         els[7][2][2] = "null";
         els[7][2][3] = "0";
         els[7][2][4] = "1";
